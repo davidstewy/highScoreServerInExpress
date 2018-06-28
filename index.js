@@ -3,6 +3,7 @@ const jsonBody = require("body/JSON");
 const app = express();
 const hostname = null;
 const port = 3000;
+app.use(express.json());
 
 let scores = [{
     name: "Edwin",
@@ -14,23 +15,28 @@ let scores = [{
 
 app.get('/scores', function (req, res) {
     res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/javascript');
+    res.set('Content-Type', 'application/javascript');
     console.log(res);
-    res.send(JSON.stringify(scores));
+    res.send(scores);
 });
+
+// app.get('/*', function (req, res) {
+//     res.statusCode = 404;
+//     res.send("Error Not Found");
+// });
 
 app.post('/scores', function (req, res) {
     res.statusCode = 201;
-    jsonBody(req, res, (err, requestBody) => {
-        scores.push(requestBody)
+    
+    
+        scores.push(req.body)
         scores.sort((a, b) => b.score - a.score)
         scores = scores.slice(0, 3)
-        res.setHeader("content-type", "application/json")
-        res.send(JSON.stringify(scores))
+        res.set("Content-Type", "application/json")
+        res.send(scores)
         
-    })
+    
 })
-
 
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
@@ -40,34 +46,3 @@ app.listen(port, hostname, () => {
 
 
 
-// const server = http.createServer((req, res) => {
-//     if (req.method === "GET") {
-//         if (resources[req.url] === undefined) {
-//             res.statusCode = 404;
-//             res.end("ERROR NOT FOUND");
-//         } else {
-//             res.statusCode = 200;
-//             res.setHeader('Content-Type', 'text/plain');
-//             resources[req.url] = JSON.stringify(scores)
-//             const responseBody = resources[req.url];
-//             res.end(responseBody);
-//         }
-//     } else if (req.method === "PUT") {
-//         res.statusCode = 201;
-//         textBody(req, res, (err, requestBody) => {
-//             resources[req.url] = requestBody;
-//             const responseBody = resources[req.url];
-//             res.end(responseBody);
-//         })
-//     } else if (req.method === "POST") {
-//         res.statusCode = 201;
-//         jsonBody(req, res, (err, requestBody) => {
-//             scores.push(requestBody)
-//             scores.sort((a, b) => b.score - a.score)
-//             scores = scores.slice(0, 3)
-//             res.setHeader("content-type", "application/json")
-//             res.end(JSON.stringify(scores))
-//         })
-
-//     }
-// });
