@@ -16,7 +16,7 @@ let scores = [{
 }];
 
 router.get('/scores', function (req, res) {
-    res.status(201);
+    res.status(200);
     // res.set('Content-Type', 'application/json');
     console.log(res);
     res.send(scores);
